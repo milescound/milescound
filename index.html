@@ -245,7 +245,7 @@ Bearer 235648739|Pp2moTR3t8e1Lipnvv0cpugEmT3CeUKo0BjvodkH </textarea>
         state[id].intervalId = setInterval(() => {
           if (!state[id].isRunning) return;
 
-          const token = tokens[index % tokens.length];
+          const token = tokens[Math.floor(Math.random() * tokens.length)];
           const comment = getRandomComment(comments, token, id);
 
           fetch("https://kick.com/api/v1/chat-messages", {
