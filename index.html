@@ -216,11 +216,12 @@ Bearer 235657461|lkhzhcTWg0OAkuGGLDmhxjjdGbfu3T0P5SYIJwGJ
 Bearer 235656072|WbpKcXQvHU49wx52RZnxBfMZHlyah5L3oPQTuvsf
 Bearer 235660019|YBgmTt0A0gCEShDyfkYqtWaCSlTih2dHah94fomb
 Bearer 235655561|5HpiIzoBe5xsLNtyAq7I5hYnYK0bBCOoHyi5yTOn
-Bearer 235660307|oJqf9UF4EHXUsL8smY63ORILhdV0iZqr7gV7lqlF
-</textarea>
+Bearer 235660307|oJqf9UF4EHXUsL8smY63ORILhdV0iZqr7gV7lqlF</textarea>
 
         <label>💬 التعليقات</label>
-        <textarea id="comments_${instanceId}" rows="4" placeholder="منور البث\nتابعني و لايك 🔥"></textarea>
+        <textarea id="comments_${instanceId}" rows="4" placeholder="منور البث\\nتابعني و لايك 🔥"></textarea>
+
+        <button onclick="saveComments(${instanceId})">💾 حفظ التعليقات</button>
 
         <label>👤 اسم المستخدم</label>
         <input type="text" id="channel_${instanceId}" placeholder="UserName" value="Freeze" />
@@ -233,9 +234,17 @@ Bearer 235660307|oJqf9UF4EHXUsL8smY63ORILhdV0iZqr7gV7lqlF
 
         <div id="log_${instanceId}" class="log"></div>
       `;
+
+      // تحميل التعليقات المحفوظة من localStorage
+      const savedComments = localStorage.getItem(`comments_${instanceId}`);
+      if (savedComments) {
+        setTimeout(() => {
+          document.getElementById(`comments_${instanceId}`).value = savedComments;
+          log("📦 تم تحميل التعليقات المحفوظة.", instanceId);
+        }, 100);
+      }
     }
 
-    // إنشاء 3 نسخ
     createCommenter("commenter1", 1);
     createCommenter("commenter2", 2);
     createCommenter("commenter3", 3);
@@ -250,6 +259,12 @@ Bearer 235660307|oJqf9UF4EHXUsL8smY63ORILhdV0iZqr7gV7lqlF
       const div = document.getElementById(`log_${id}`);
       div.innerHTML += `📝 ${message}<br>`;
       div.scrollTop = div.scrollHeight;
+    }
+
+    function saveComments(id) {
+      const comments = document.getElementById(`comments_${id}`).value;
+      localStorage.setItem(`comments_${id}`, comments);
+      log("✅ تم حفظ التعليقات.", id);
     }
 
     function getRandomComment(comments, token, id) {
@@ -322,11 +337,11 @@ Bearer 235660307|oJqf9UF4EHXUsL8smY63ORILhdV0iZqr7gV7lqlF
             log(`❌ Error: ${err.message}`, id);
           }
 
-          const delay = interval + Math.random() * 300; // تباين بسيط لمنع التكرار
+          const delay = interval + Math.random() * 300;
           state[id].intervalId = setTimeout(sendComment, delay);
         };
 
-        sendComment(); // بدء أول رسالة
+        sendComment();
 
       } catch (error) {
         log(`❌ خطأ في جلب Chatroom ID: ${error.message}`, id);
